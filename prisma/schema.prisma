@@ -8,16 +8,86 @@ datasource db {
 }
 
 model User {
-  id        Int      @id @default(autoincrement())
+  id        Int       @id @default(autoincrement())
   name      String
-  email     String   @unique
+  email     String    @unique
+  password  String
+  authToken String
   role      Role
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  products  Product[] // One-to-many relation to Product
+  cartItems Cart[] // One-to-many relation to Cart (join table)
+  orders    Order[] // One-to-many relation to Order
+}
+
+model Product {
+  id          Int         @id @default(autoincrement())
+  name        String
+  description String
+  price       Float
+  quantity    Int
+  category    Category?   @relation(fields: [categoryId], references: [id]) // Optional relation to Category
+  categoryId  Int?
+  user        User        @relation(fields: [userId], references: [id])
+  userId      Int
+  cartItems   Cart[] // One-to-many relation to Cart (join table)
+  sales       Sale[] // One-to-many relation to Sale
+  OrderItem   OrderItem[]
+}
+
+model Cart {
+  id        Int     @id @default(autoincrement())
+  quantity  Int
+  user      User    @relation(fields: [userId], references: [id])
+  userId    Int
+  product   Product @relation(fields: [productId], references: [id])
+  productId Int
+}
+
+model Order {
+  id        Int         @id @default(autoincrement())
+  total     Float
+  user      User        @relation(fields: [userId], references: [id])
+  userId    Int
+  status    OrderStatus
+  items     OrderItem[]
+  createdAt DateTime    @default(now())
+}
+
+model OrderItem {
+  id        Int     @id @default(autoincrement())
+  quantity  Int
+  price     Float // Price at the time of order
+  product   Product @relation(fields: [productId], references: [id])
+  productId Int
+  order     Order   @relation(fields: [orderId], references: [id])
+  orderId   Int
+}
+
+model Sale {
+  id        Int      @id @default(autoincrement())
+  quantity  Int
+  total     Float
+  product   Product  @relation(fields: [productId], references: [id])
+  productId Int
   createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+}
+
+model Category {
+  id       Int       @id @default(autoincrement())
+  name     String    @unique
+  products Product[]
+}
+
+enum OrderStatus {
+  PENDING
+  COMPLETED
+  CANCELLED
 }
 
 enum Role {
+  ADMIN
   BUYER
   SELLER
-  ADMIN
 }
