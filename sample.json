@@ -1,0 +1,26 @@
+[
+  {
+    "name": "Faizan Ali",
+    "email": "faizan@mailinator.com",
+    "password": "1234567",
+    "role": "ADMIN"
+  },
+  {
+    "name": "Hamail Rehman",
+    "email": "hamail@mailinator.com",
+    "password": "1234567",
+    "role": "SELLER"
+  },
+  {
+    "name": "Zaid Vohra",
+    "email": "zaid@mailinator.com",
+    "password": "1234567",
+    "role": "BUYER"
+  },
+  {
+    "name": "Aadil Bhai",
+    "email": "aadil@mailinator.com",
+    "password": "1234567",
+    "role": "BUYER"
+  }
+]
