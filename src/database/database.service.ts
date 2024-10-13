@@ -40,7 +40,7 @@ export class DatabaseService extends PrismaClient implements OnModuleInit {
     data: Record<string, any>,
   ): Promise<void> {
     const updates: string = Object.keys(data)
-      .map((key) => `${key} = '${data[key]}'`)
+      .map((key) => `"${key}" = '${data[key]}'`)
       .join(', ');
 
     const query: string = `UPDATE "${table}" SET ${updates} WHERE id = ${id}`;
@@ -50,6 +50,12 @@ export class DatabaseService extends PrismaClient implements OnModuleInit {
   async deleteEntity(table: string, id: number): Promise<void> {
     const query: string = `DELETE FROM "${table}" WHERE id = ${id}`;
     await this.$executeRawUnsafe(query);
+  }
+
+  async executeDQLQuery(query: string): Promise<any> {
+    const result: any = await this.$queryRawUnsafe(query);
+
+    return result;
   }
 
   generateAuthToken(length: number = 32): string {

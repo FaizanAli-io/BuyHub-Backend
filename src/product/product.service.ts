@@ -8,11 +8,7 @@ export class ProductService {
   constructor(private readonly databaseService: DatabaseService) {}
 
   async create(createProductDto: CreateProductDto): Promise<void> {
-    const createdAt = this.databaseService.getCurrentDate();
-    return this.databaseService.createEntity('Product', {
-      ...createProductDto,
-      createdAt,
-    });
+    return this.databaseService.createEntity('Product', createProductDto);
   }
 
   async findAll(): Promise<Product[]> {

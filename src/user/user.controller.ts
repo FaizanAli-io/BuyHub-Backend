@@ -50,6 +50,17 @@ export class UserController {
     return this.userService.findOne(id);
   }
 
+  @Get(':id/products')
+  @ApiOperation({ summary: 'Retrieve all products associated with a user' })
+  @ApiResponse({
+    status: 200,
+    description: 'List of products associated with the user.',
+  })
+  @ApiResponse({ status: 404, description: 'User not found.' })
+  findProductsByUserId(@Param('id') id: number) {
+    return this.userService.findProductsByUserId(id);
+  }
+
   @Patch(':id')
   @ApiOperation({ summary: 'Update a user by ID' })
   @ApiBody({ type: UpdateUserDto })
