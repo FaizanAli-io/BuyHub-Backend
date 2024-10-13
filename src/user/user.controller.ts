@@ -50,6 +50,17 @@ export class UserController {
     return this.userService.findOne(id);
   }
 
+  @Get(':id/cart')
+  @ApiOperation({ summary: 'Retrieve the cart associated with a user' })
+  @ApiResponse({
+    status: 200,
+    description: 'The cart associated with the user.',
+  })
+  @ApiResponse({ status: 404, description: 'User not found.' })
+  findCartByUserId(@Param('id') id: number) {
+    return this.userService.findCartByUserId(id);
+  }
+
   @Get(':id/products')
   @ApiOperation({ summary: 'Retrieve all products associated with a user' })
   @ApiResponse({

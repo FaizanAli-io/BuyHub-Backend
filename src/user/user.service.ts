@@ -32,6 +32,13 @@ export class UserService {
     return this.databaseService.findEntityById('User', id);
   }
 
+  async findCartByUserId(userId: number): Promise<Product[]> {
+    const query: string = `SELECT * FROM "Product" WHERE id IN 
+    (SELECT "productId" FROM "Cart" WHERE "userId" = ${userId})`;
+
+    return this.databaseService.executeDQLQuery(query);
+  }
+
   async findProductsByUserId(userId: number): Promise<Product[]> {
     const query: string = `SELECT * FROM "Product" WHERE "userId" = ${userId}`;
 
