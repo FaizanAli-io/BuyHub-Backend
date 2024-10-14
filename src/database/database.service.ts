@@ -58,10 +58,7 @@ export class DatabaseService extends PrismaClient implements OnModuleInit {
     return result;
   }
 
-  async executeDQLQuery(
-    query: string,
-    forOne: boolean = false,
-  ): Promise<any[]> {
+  async executeQuery(query: string, forOne: boolean = false): Promise<any[]> {
     const result: any[] = await this.$queryRawUnsafe(query);
 
     return forOne ? result[0] : result;

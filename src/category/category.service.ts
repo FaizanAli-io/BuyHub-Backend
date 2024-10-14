@@ -22,7 +22,7 @@ export class CategoryService {
   async findProductsByCategoryId(categoryId: number): Promise<Product[]> {
     const query: string = `SELECT * FROM "Product" WHERE "categoryId" = ${categoryId}`;
 
-    return this.databaseService.executeDQLQuery(query);
+    return this.databaseService.executeQuery(query);
   }
 
   async update(

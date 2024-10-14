@@ -57,6 +57,13 @@ export class UserController {
     return this.userService.findCartByUserId(id);
   }
 
+  @Delete(':id/cart')
+  @ApiOperation({ summary: 'Delete the cart associated with a user' })
+  @ApiResponse({ status: 200, description: 'Cart deleted.' })
+  dropCartByUserId(@Param('id') id: number) {
+    return this.userService.dropCartByUserId(id);
+  }
+
   @Get(':id/products')
   @ApiOperation({ summary: 'Retrieve all products associated with a user' })
   @ApiResponse({

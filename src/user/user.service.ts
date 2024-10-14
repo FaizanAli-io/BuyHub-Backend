@@ -34,23 +34,27 @@ export class UserService {
 
   async findCartByUserId(userId: number): Promise<any[]> {
     const query: string = `SELECT * FROM "Cart" WHERE "userId" = ${userId}`;
-    const cartItems: any[] = await this.databaseService.executeDQLQuery(query);
+    const cartItems: any[] = await this.databaseService.executeQuery(query);
 
     for (const cartItem of cartItems) {
       const query: string = `SELECT * FROM "Product" WHERE id = ${cartItem.productId}`;
-      cartItem.product = await this.databaseService.executeDQLQuery(
-        query,
-        true,
-      );
+      cartItem.product = await this.databaseService.executeQuery(query, true);
     }
 
     return cartItems;
   }
 
+  async dropCartByUserId(userId: number): Promise<any[]> {
+    const query: string = `DELETE FROM "Cart" WHERE "userId" = ${userId} RETURNING *`;
+    const deletedCarts: any[] = await this.databaseService.executeQuery(query);
+
+    return deletedCarts;
+  }
+
   async findProductsByUserId(userId: number): Promise<Product[]> {
     const query: string = `SELECT * FROM "Product" WHERE "userId" = ${userId}`;
 
-    return this.databaseService.executeDQLQuery(query);
+    return this.databaseService.executeQuery(query);
   }
 
   async update(id: number, updateUserDto: UpdateUserDto): Promise<User | null> {
