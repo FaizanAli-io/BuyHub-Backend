@@ -35,7 +35,6 @@ export class CategoryController {
   @Get(':id')
   @ApiOperation({ summary: 'Retrieve a category by ID' })
   @ApiResponse({ status: 200, description: 'Category found.' })
-  @ApiResponse({ status: 404, description: 'Category not found.' })
   findOne(@Param('id', ParseIntPipe) id: number) {
     return this.categoryService.findOne(id);
   }
@@ -46,7 +45,6 @@ export class CategoryController {
     status: 200,
     description: 'List of products associated with the category.',
   })
-  @ApiResponse({ status: 404, description: 'Category not found.' })
   findProductsByCategoryId(@Param('id') id: number) {
     return this.categoryService.findProductsByCategoryId(id);
   }
@@ -55,7 +53,6 @@ export class CategoryController {
   @ApiOperation({ summary: 'Update a category by ID' })
   @ApiBody({ type: UpdateCategoryDto })
   @ApiResponse({ status: 200, description: 'Category updated successfully.' })
-  @ApiResponse({ status: 404, description: 'Category not found.' })
   update(
     @Param('id', ParseIntPipe) id: number,
     @Body() updateCategoryDto: UpdateCategoryDto,
@@ -66,7 +63,6 @@ export class CategoryController {
   @Delete(':id')
   @ApiOperation({ summary: 'Delete a category by ID' })
   @ApiResponse({ status: 200, description: 'Category deleted successfully.' })
-  @ApiResponse({ status: 404, description: 'Category not found.' })
   remove(@Param('id', ParseIntPipe) id: number) {
     return this.categoryService.remove(id);
   }

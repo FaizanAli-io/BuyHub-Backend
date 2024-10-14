@@ -8,7 +8,7 @@ export class DatabaseService extends PrismaClient implements OnModuleInit {
     await this.$connect();
   }
 
-  async createEntity(table: string, data: Record<string, any>): Promise<void> {
+  async createEntity(table: string, data: Record<string, any>): Promise<any> {
     const keys: string = Object.keys(data)
       .map((value) => `"${value}"`)
       .join(', ');
@@ -16,8 +16,10 @@ export class DatabaseService extends PrismaClient implements OnModuleInit {
       .map((value) => `'${value}'`)
       .join(', ');
 
-    const query: string = `INSERT INTO "${table}" (${keys}) VALUES (${values})`;
-    await this.$executeRawUnsafe(query);
+    const query: string = `INSERT INTO "${table}" (${keys}) VALUES (${values}) RETURNING *`;
+    const result: any = await this.$queryRawUnsafe(query);
+
+    return result;
   }
 
   async findAllEntities(table: string): Promise<any[]> {
@@ -29,27 +31,31 @@ export class DatabaseService extends PrismaClient implements OnModuleInit {
 
   async findEntityById(table: string, id: number): Promise<any> {
     const query: string = `SELECT * FROM "${table}" WHERE id = ${id}`;
-    const result: any[] = await this.$queryRawUnsafe(query);
+    const result: any = await this.$queryRawUnsafe(query);
 
-    return result.length > 0 ? result[0] : null;
+    return result;
   }
 
   async updateEntity(
     table: string,
     id: number,
     data: Record<string, any>,
-  ): Promise<void> {
+  ): Promise<any> {
     const updates: string = Object.keys(data)
       .map((key) => `"${key}" = '${data[key]}'`)
       .join(', ');
 
-    const query: string = `UPDATE "${table}" SET ${updates} WHERE id = ${id}`;
-    await this.$executeRawUnsafe(query);
+    const query: string = `UPDATE "${table}" SET ${updates} WHERE id = ${id} RETURNING *`;
+    const result: any = this.$queryRawUnsafe(query);
+
+    return result;
   }
 
-  async deleteEntity(table: string, id: number): Promise<void> {
-    const query: string = `DELETE FROM "${table}" WHERE id = ${id}`;
-    await this.$executeRawUnsafe(query);
+  async deleteEntity(table: string, id: number): Promise<any> {
+    const query: string = `DELETE FROM "${table}" WHERE id = ${id} RETURNING *`;
+    const result: any = this.$queryRawUnsafe(query);
+
+    return result;
   }
 
   async executeDQLQuery(query: string): Promise<any> {

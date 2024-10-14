@@ -7,7 +7,7 @@ import { Category, Product } from '@prisma/client';
 export class CategoryService {
   constructor(private readonly databaseService: DatabaseService) {}
 
-  async create(createCategoryDto: CreateCategoryDto): Promise<void> {
+  async create(createCategoryDto: CreateCategoryDto): Promise<Category | null> {
     return this.databaseService.createEntity('Category', createCategoryDto);
   }
 
@@ -28,11 +28,11 @@ export class CategoryService {
   async update(
     id: number,
     updateCategoryDto: UpdateCategoryDto,
-  ): Promise<void> {
+  ): Promise<Category | null> {
     return this.databaseService.updateEntity('Category', id, updateCategoryDto);
   }
 
-  async remove(id: number): Promise<void> {
+  async remove(id: number): Promise<Category | null> {
     return this.databaseService.deleteEntity('Category', id);
   }
 }

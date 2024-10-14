@@ -7,7 +7,7 @@ import { User, Product } from '@prisma/client';
 export class UserService {
   constructor(private readonly databaseService: DatabaseService) {}
 
-  async create(createUserDto: CreateUserDto): Promise<void> {
+  async create(createUserDto: CreateUserDto): Promise<User | null> {
     const authToken = this.databaseService.generateAuthToken(32);
     const createdAt = this.databaseService.getCurrentDate();
     const updatedAt = this.databaseService.getCurrentDate();
@@ -45,11 +45,11 @@ export class UserService {
     return this.databaseService.executeDQLQuery(query);
   }
 
-  async update(id: number, updateUserDto: UpdateUserDto): Promise<void> {
+  async update(id: number, updateUserDto: UpdateUserDto): Promise<User | null> {
     return this.databaseService.updateEntity('User', id, updateUserDto);
   }
 
-  async remove(id: number): Promise<void> {
+  async remove(id: number): Promise<User | null> {
     return this.databaseService.deleteEntity('User', id);
   }
 }

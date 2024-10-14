@@ -7,7 +7,7 @@ import { Product } from '@prisma/client';
 export class ProductService {
   constructor(private readonly databaseService: DatabaseService) {}
 
-  async create(createProductDto: CreateProductDto): Promise<void> {
+  async create(createProductDto: CreateProductDto): Promise<Product | null> {
     return this.databaseService.createEntity('Product', createProductDto);
   }
 
@@ -19,11 +19,14 @@ export class ProductService {
     return this.databaseService.findEntityById('Product', id);
   }
 
-  async update(id: number, updateProductDto: UpdateProductDto): Promise<void> {
+  async update(
+    id: number,
+    updateProductDto: UpdateProductDto,
+  ): Promise<Product | null> {
     return this.databaseService.updateEntity('Product', id, updateProductDto);
   }
 
-  async remove(id: number): Promise<void> {
+  async remove(id: number): Promise<Product | null> {
     return this.databaseService.deleteEntity('Product', id);
   }
 }

@@ -8,7 +8,7 @@ import {
   Patch,
 } from '@nestjs/common';
 import { CartService } from './cart.service';
-import { CreateCartDto } from './dto/create-cart.dto';
+import { CreateCartDto, UpdateCartDto } from './dto';
 import { ApiTags, ApiOperation, ApiResponse } from '@nestjs/swagger';
 
 @ApiTags('Carts')
@@ -33,7 +33,6 @@ export class CartController {
   @Get(':id')
   @ApiOperation({ summary: 'Retrieve a cart item by ID' })
   @ApiResponse({ status: 200, description: 'Cart item found.' })
-  @ApiResponse({ status: 404, description: 'Cart item not found.' })
   findOne(@Param('id') id: number) {
     return this.cartService.findOne(id);
   }
@@ -41,15 +40,13 @@ export class CartController {
   @Patch(':id')
   @ApiOperation({ summary: 'Update a cart item by ID' })
   @ApiResponse({ status: 200, description: 'Cart item updated successfully.' })
-  @ApiResponse({ status: 404, description: 'Cart item not found.' })
-  update(@Param('id') id: number, @Body() updateCartDto: CreateCartDto) {
+  update(@Param('id') id: number, @Body() updateCartDto: UpdateCartDto) {
     return this.cartService.update(id, updateCartDto);
   }
 
   @Delete(':id')
   @ApiOperation({ summary: 'Delete a cart item by ID' })
   @ApiResponse({ status: 200, description: 'Cart item deleted successfully.' })
-  @ApiResponse({ status: 404, description: 'Cart item not found.' })
   remove(@Param('id') id: number) {
     return this.cartService.remove(id);
   }

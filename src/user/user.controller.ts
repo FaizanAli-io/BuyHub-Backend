@@ -28,7 +28,6 @@ export class UserController {
   @ApiOperation({ summary: 'Create a user' })
   @ApiBody({ type: CreateUserDto })
   @ApiResponse({ status: 201, description: 'User created successfully.' })
-  @ApiResponse({ status: 400, description: 'Invalid input.' })
   create(@Body() createUserDto: CreateUserDto) {
     return this.userService.create(createUserDto);
   }
@@ -37,7 +36,6 @@ export class UserController {
   @ApiOperation({ summary: 'Retrieve all users' })
   @ApiQuery({ name: 'role', required: false })
   @ApiResponse({ status: 200, description: 'List of users.' })
-  @ApiResponse({ status: 404, description: 'No users found.' })
   findAll(@Query('role') role?: 'BUYER' | 'SELLER' | 'ADMIN') {
     return this.userService.findAll(role);
   }
@@ -45,7 +43,6 @@ export class UserController {
   @Get(':id')
   @ApiOperation({ summary: 'Retrieve a user by ID' })
   @ApiResponse({ status: 200, description: 'User found.' })
-  @ApiResponse({ status: 404, description: 'User not found.' })
   findOne(@Param('id', ParseIntPipe) id: number) {
     return this.userService.findOne(id);
   }
@@ -56,7 +53,6 @@ export class UserController {
     status: 200,
     description: 'The cart associated with the user.',
   })
-  @ApiResponse({ status: 404, description: 'User not found.' })
   findCartByUserId(@Param('id') id: number) {
     return this.userService.findCartByUserId(id);
   }
@@ -67,7 +63,6 @@ export class UserController {
     status: 200,
     description: 'List of products associated with the user.',
   })
-  @ApiResponse({ status: 404, description: 'User not found.' })
   findProductsByUserId(@Param('id') id: number) {
     return this.userService.findProductsByUserId(id);
   }
@@ -76,7 +71,6 @@ export class UserController {
   @ApiOperation({ summary: 'Update a user by ID' })
   @ApiBody({ type: UpdateUserDto })
   @ApiResponse({ status: 200, description: 'User updated successfully.' })
-  @ApiResponse({ status: 404, description: 'User not found.' })
   update(
     @Param('id', ParseIntPipe) id: number,
     @Body() updateUserDto: UpdateUserDto,
@@ -87,7 +81,6 @@ export class UserController {
   @Delete(':id')
   @ApiOperation({ summary: 'Delete a user by ID' })
   @ApiResponse({ status: 200, description: 'User deleted successfully.' })
-  @ApiResponse({ status: 404, description: 'User not found.' })
   remove(@Param('id', ParseIntPipe) id: number) {
     return this.userService.remove(id);
   }

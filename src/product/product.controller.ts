@@ -21,7 +21,6 @@ export class ProductController {
   @ApiOperation({ summary: 'Create a product' })
   @ApiBody({ type: CreateProductDto })
   @ApiResponse({ status: 201, description: 'Product created successfully.' })
-  @ApiResponse({ status: 400, description: 'Invalid input.' })
   create(@Body() createProductDto: CreateProductDto) {
     return this.productsService.create(createProductDto);
   }
@@ -29,7 +28,6 @@ export class ProductController {
   @Get()
   @ApiOperation({ summary: 'Retrieve all products' })
   @ApiResponse({ status: 200, description: 'List of products.' })
-  @ApiResponse({ status: 404, description: 'No products found.' })
   findAll() {
     return this.productsService.findAll();
   }
@@ -37,7 +35,6 @@ export class ProductController {
   @Get(':id')
   @ApiOperation({ summary: 'Retrieve a product by ID' })
   @ApiResponse({ status: 200, description: 'Product found.' })
-  @ApiResponse({ status: 404, description: 'Product not found.' })
   findOne(@Param('id', ParseIntPipe) id: number) {
     return this.productsService.findOne(id);
   }
@@ -46,7 +43,6 @@ export class ProductController {
   @ApiOperation({ summary: 'Update a product by ID' })
   @ApiBody({ type: UpdateProductDto })
   @ApiResponse({ status: 200, description: 'Product updated successfully.' })
-  @ApiResponse({ status: 404, description: 'Product not found.' })
   update(
     @Param('id', ParseIntPipe) id: number,
     @Body() updateProductDto: UpdateProductDto,
@@ -57,7 +53,6 @@ export class ProductController {
   @Delete(':id')
   @ApiOperation({ summary: 'Delete a product by ID' })
   @ApiResponse({ status: 200, description: 'Product deleted successfully.' })
-  @ApiResponse({ status: 404, description: 'Product not found.' })
   remove(@Param('id', ParseIntPipe) id: number) {
     return this.productsService.remove(id);
   }
