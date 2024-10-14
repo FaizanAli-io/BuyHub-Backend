@@ -17,9 +17,9 @@ export class DatabaseService extends PrismaClient implements OnModuleInit {
       .join(', ');
 
     const query: string = `INSERT INTO "${table}" (${keys}) VALUES (${values}) RETURNING *`;
-    const result: any = await this.$queryRawUnsafe(query);
+    const result: any[] = await this.$queryRawUnsafe(query);
 
-    return result;
+    return result.length > 0 ? result[0] : null;
   }
 
   async findAllEntities(table: string): Promise<any[]> {
@@ -31,9 +31,9 @@ export class DatabaseService extends PrismaClient implements OnModuleInit {
 
   async findEntityById(table: string, id: number): Promise<any> {
     const query: string = `SELECT * FROM "${table}" WHERE id = ${id}`;
-    const result: any = await this.$queryRawUnsafe(query);
+    const result: any[] = await this.$queryRawUnsafe(query);
 
-    return result;
+    return result.length > 0 ? result[0] : null;
   }
 
   async updateEntity(
@@ -58,10 +58,13 @@ export class DatabaseService extends PrismaClient implements OnModuleInit {
     return result;
   }
 
-  async executeDQLQuery(query: string): Promise<any> {
-    const result: any = await this.$queryRawUnsafe(query);
+  async executeDQLQuery(
+    query: string,
+    forOne: boolean = false,
+  ): Promise<any[]> {
+    const result: any[] = await this.$queryRawUnsafe(query);
 
-    return result;
+    return forOne ? result[0] : result;
   }
 
   generateAuthToken(length: number = 32): string {

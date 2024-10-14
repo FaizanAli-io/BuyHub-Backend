@@ -1,13 +1,28 @@
-import { Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { DatabaseService } from 'src/database/database.service';
+import { ProductService } from 'src/product/product.service';
 import { CreateCartDto, UpdateCartDto } from './dto';
-import { Cart } from '@prisma/client';
+import { Cart, Product } from '@prisma/client';
 
 @Injectable()
 export class CartService {
-  constructor(private readonly databaseService: DatabaseService) {}
+  constructor(
+    private readonly databaseService: DatabaseService,
+    private readonly productService: ProductService,
+  ) {}
 
   async create(createCartDto: CreateCartDto): Promise<Cart | null> {
+    const product: Product = await this.productService.findOne(
+      createCartDto.productId,
+    );
+
+    if (product.quantity < createCartDto.quantity) {
+      throw new HttpException(
+        'Requested quantity exceeds available stock',
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+
     return this.databaseService.createEntity('Cart', createCartDto);
   }
 

@@ -32,11 +32,19 @@ export class UserService {
     return this.databaseService.findEntityById('User', id);
   }
 
-  async findCartByUserId(userId: number): Promise<Product[]> {
-    const query: string = `SELECT * FROM "Product" WHERE id IN 
-    (SELECT "productId" FROM "Cart" WHERE "userId" = ${userId})`;
+  async findCartByUserId(userId: number): Promise<any[]> {
+    const query: string = `SELECT * FROM "Cart" WHERE "userId" = ${userId}`;
+    const cartItems: any[] = await this.databaseService.executeDQLQuery(query);
 
-    return this.databaseService.executeDQLQuery(query);
+    for (const cartItem of cartItems) {
+      const query: string = `SELECT * FROM "Product" WHERE id = ${cartItem.productId}`;
+      cartItem.product = await this.databaseService.executeDQLQuery(
+        query,
+        true,
+      );
+    }
+
+    return cartItems;
   }
 
   async findProductsByUserId(userId: number): Promise<Product[]> {

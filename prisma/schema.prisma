@@ -16,9 +16,9 @@ model User {
   role      Role
   createdAt DateTime  @default(now())
   updatedAt DateTime  @updatedAt
-  products  Product[] // One-to-many relation to Product
-  cartItems Cart[] // One-to-many relation to Cart (join table)
-  orders    Order[] // One-to-many relation to Order
+  products  Product[]
+  cartItems Cart[]
+  orders    Order[]
 }
 
 model Product {
@@ -27,28 +27,28 @@ model Product {
   description String
   price       Float
   quantity    Int
-  category    Category?   @relation(fields: [categoryId], references: [id]) // Optional relation to Category
+  category    Category?   @relation(fields: [categoryId], references: [id])
   categoryId  Int?
-  user        User        @relation(fields: [userId], references: [id])
+  user        User        @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId      Int
-  cartItems   Cart[] // One-to-many relation to Cart (join table)
-  sales       Sale[] // One-to-many relation to Sale
+  cartItems   Cart[]
+  sales       Sale[]
   OrderItem   OrderItem[]
 }
 
 model Cart {
   id        Int     @id @default(autoincrement())
   quantity  Int
-  user      User    @relation(fields: [userId], references: [id])
+  user      User    @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId    Int
-  product   Product @relation(fields: [productId], references: [id])
+  product   Product @relation(fields: [productId], references: [id], onDelete: Cascade)
   productId Int
 }
 
 model Order {
   id        Int         @id @default(autoincrement())
   total     Float
-  user      User        @relation(fields: [userId], references: [id])
+  user      User        @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId    Int
   status    OrderStatus
   items     OrderItem[]
@@ -58,10 +58,10 @@ model Order {
 model OrderItem {
   id        Int     @id @default(autoincrement())
   quantity  Int
-  price     Float // Price at the time of order
+  price     Float
   product   Product @relation(fields: [productId], references: [id])
   productId Int
-  order     Order   @relation(fields: [orderId], references: [id])
+  order     Order   @relation(fields: [orderId], references: [id], onDelete: Cascade)
   orderId   Int
 }
 
