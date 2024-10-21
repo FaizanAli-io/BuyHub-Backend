@@ -32,7 +32,11 @@
     }
   ],
 
-  "categories": [{ "name": "Furniture" }, { "name": "Perfumes" }],
+  "categories": [
+    { "name": "Furniture" },
+    { "name": "Perfumes" },
+    { "name": "Electronics" }
+  ],
 
   "products": [
     {
