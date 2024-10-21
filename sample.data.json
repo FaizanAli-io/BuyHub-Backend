@@ -33,8 +33,9 @@
   ],
 
   "categories": [
-    { "name": "Furniture" },
+    { "name": "Apparel" },
     { "name": "Perfumes" },
+    { "name": "Furniture" },
     { "name": "Electronics" }
   ],
 
