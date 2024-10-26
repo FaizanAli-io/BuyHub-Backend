@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { DatabaseService } from 'src/database/database.service';
-import { CreateUserDto, UpdateUserDto } from './dto';
+import { CreateUserDto, UpdateUserDto, LoginUserDto } from './dto';
 import { User, Product } from '@prisma/client';
 
 @Injectable()
@@ -18,6 +18,18 @@ export class UserService {
       createdAt,
       updatedAt,
     });
+  }
+
+  async login(loginUserDto: LoginUserDto): Promise<any> {
+    const users = await this.findAll();
+    const { email, password } = loginUserDto;
+
+    const user = users.find(
+      (user) => user.email === email && user.password === password,
+    );
+
+    if (user) return user;
+    else return false;
   }
 
   async findAll(role?: 'BUYER' | 'SELLER' | 'ADMIN'): Promise<User[]> {

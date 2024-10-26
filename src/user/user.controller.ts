@@ -10,7 +10,7 @@ import {
   Query,
 } from '@nestjs/common';
 import { UserService } from './user.service';
-import { CreateUserDto, UpdateUserDto } from './dto';
+import { CreateUserDto, UpdateUserDto, LoginUserDto } from './dto';
 import {
   ApiTags,
   ApiOperation,
@@ -28,22 +28,30 @@ export class UserController {
   @ApiOperation({ summary: 'Create a user' })
   @ApiBody({ type: CreateUserDto })
   @ApiResponse({ status: 201, description: 'User created successfully.' })
-  create(@Body() createUserDto: CreateUserDto) {
+  create(@Body() createUserDto: CreateUserDto): Promise<any> {
     return this.userService.create(createUserDto);
+  }
+
+  @Post('/login')
+  @ApiOperation({ summary: 'Log in a user' })
+  @ApiBody({ type: LoginUserDto })
+  @ApiResponse({ status: 200, description: 'User logged in successfully.' })
+  login(@Body() loginUserDto: LoginUserDto): Promise<any> {
+    return this.userService.login(loginUserDto);
   }
 
   @Get()
   @ApiOperation({ summary: 'Retrieve all users' })
   @ApiQuery({ name: 'role', required: false })
   @ApiResponse({ status: 200, description: 'List of users.' })
-  findAll(@Query('role') role?: 'BUYER' | 'SELLER' | 'ADMIN') {
+  findAll(@Query('role') role?: 'BUYER' | 'SELLER' | 'ADMIN'): Promise<any[]> {
     return this.userService.findAll(role);
   }
 
   @Get(':id')
   @ApiOperation({ summary: 'Retrieve a user by ID' })
   @ApiResponse({ status: 200, description: 'User found.' })
-  findOne(@Param('id', ParseIntPipe) id: number) {
+  findOne(@Param('id', ParseIntPipe) id: number): Promise<any> {
     return this.userService.findOne(id);
   }
 
@@ -53,14 +61,14 @@ export class UserController {
     status: 200,
     description: 'The cart associated with the user.',
   })
-  findCartByUserId(@Param('id') id: number) {
+  findCartByUserId(@Param('id') id: number): Promise<any> {
     return this.userService.findCartByUserId(id);
   }
 
   @Delete(':id/cart')
   @ApiOperation({ summary: 'Delete the cart associated with a user' })
   @ApiResponse({ status: 200, description: 'Cart deleted.' })
-  dropCartByUserId(@Param('id') id: number) {
+  dropCartByUserId(@Param('id') id: number): Promise<any> {
     return this.userService.dropCartByUserId(id);
   }
 
@@ -70,7 +78,7 @@ export class UserController {
     status: 200,
     description: 'List of products associated with the user.',
   })
-  findProductsByUserId(@Param('id') id: number) {
+  findProductsByUserId(@Param('id') id: number): Promise<any[]> {
     return this.userService.findProductsByUserId(id);
   }
 
@@ -81,14 +89,14 @@ export class UserController {
   update(
     @Param('id', ParseIntPipe) id: number,
     @Body() updateUserDto: UpdateUserDto,
-  ) {
+  ): Promise<any> {
     return this.userService.update(id, updateUserDto);
   }
 
   @Delete(':id')
   @ApiOperation({ summary: 'Delete a user by ID' })
   @ApiResponse({ status: 200, description: 'User deleted successfully.' })
-  remove(@Param('id', ParseIntPipe) id: number) {
+  remove(@Param('id', ParseIntPipe) id: number): Promise<any> {
     return this.userService.remove(id);
   }
 }
