@@ -56,6 +56,18 @@ export class UserService {
     return cartItems;
   }
 
+  async findOrdersByUserId(userId: number): Promise<any[]> {
+    const query: string = `SELECT * FROM "Order" WHERE "userId" = ${userId}`;
+    const orders: any[] = await this.databaseService.executeQuery(query);
+
+    for (const order of orders) {
+      const query: string = `SELECT * FROM "OrderItem" WHERE "orderId" = ${order.id}`;
+      order.items = await this.databaseService.executeQuery(query);
+    }
+
+    return orders;
+  }
+
   async dropCartByUserId(userId: number): Promise<any[]> {
     const query: string = `DELETE FROM "Cart" WHERE "userId" = ${userId} RETURNING *`;
     const deletedCarts: any[] = await this.databaseService.executeQuery(query);

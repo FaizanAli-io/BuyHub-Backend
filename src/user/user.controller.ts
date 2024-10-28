@@ -65,6 +65,16 @@ export class UserController {
     return this.userService.findCartByUserId(id);
   }
 
+  @Get(':id/orders')
+  @ApiOperation({ summary: 'Retrieve the orders associated with a user' })
+  @ApiResponse({
+    status: 200,
+    description: 'The orders associated with the user.',
+  })
+  findOrdersByUserId(@Param('id') id: number): Promise<any> {
+    return this.userService.findOrdersByUserId(id);
+  }
+
   @Delete(':id/cart')
   @ApiOperation({ summary: 'Delete the cart associated with a user' })
   @ApiResponse({ status: 200, description: 'Cart deleted.' })
