@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { DatabaseService } from 'src/database/database.service';
 import { CreateProductDto, UpdateProductDto } from './dto';
-import { Product } from '@prisma/client';
+import { Product, Review } from '@prisma/client';
 
 @Injectable()
 export class ProductService {
@@ -28,5 +28,11 @@ export class ProductService {
 
   async remove(id: number): Promise<Product | null> {
     return this.databaseService.deleteEntity('Product', id);
+  }
+
+  async findReviewsByProductId(productId: number): Promise<Review[]> {
+    const query: string = `SELECT * FROM "Review" WHERE "productId" = ${productId}`;
+
+    return this.databaseService.executeQuery(query);
   }
 }

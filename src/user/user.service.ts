@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { DatabaseService } from 'src/database/database.service';
 import { CreateUserDto, UpdateUserDto, LoginUserDto } from './dto';
-import { User, Product } from '@prisma/client';
+import { User, Product, Review } from '@prisma/client';
 
 @Injectable()
 export class UserService {
@@ -68,17 +68,23 @@ export class UserService {
     return orders;
   }
 
+  async findProductsByUserId(userId: number): Promise<Product[]> {
+    const query: string = `SELECT * FROM "Product" WHERE "userId" = ${userId}`;
+
+    return this.databaseService.executeQuery(query);
+  }
+
+  async findReviewsByUserId(userId: number): Promise<Review[]> {
+    const query: string = `SELECT * FROM "Review" WHERE "userId" = ${userId}`;
+
+    return this.databaseService.executeQuery(query);
+  }
+
   async dropCartByUserId(userId: number): Promise<any[]> {
     const query: string = `DELETE FROM "Cart" WHERE "userId" = ${userId} RETURNING *`;
     const deletedCarts: any[] = await this.databaseService.executeQuery(query);
 
     return deletedCarts;
-  }
-
-  async findProductsByUserId(userId: number): Promise<Product[]> {
-    const query: string = `SELECT * FROM "Product" WHERE "userId" = ${userId}`;
-
-    return this.databaseService.executeQuery(query);
   }
 
   async update(id: number, updateUserDto: UpdateUserDto): Promise<User | null> {

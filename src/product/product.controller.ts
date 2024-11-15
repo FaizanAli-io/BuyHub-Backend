@@ -56,4 +56,16 @@ export class ProductController {
   remove(@Param('id', ParseIntPipe) id: number) {
     return this.productsService.remove(id);
   }
+
+  @Get(':id/reviews')
+  @ApiOperation({ summary: 'Retrieve all reviews associated with a product' })
+  @ApiResponse({
+    status: 200,
+    description: 'List of reviews associated with the product.',
+  })
+  findReviewsByProductId(
+    @Param('id', ParseIntPipe) id: number,
+  ): Promise<any[]> {
+    return this.productsService.findReviewsByProductId(id);
+  }
 }

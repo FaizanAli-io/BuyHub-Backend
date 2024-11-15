@@ -2,7 +2,7 @@ import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { DatabaseService } from 'src/database/database.service';
 import { ProductService } from 'src/product/product.service';
 import { CreateCartDto, UpdateCartDto } from './dto';
-import { Cart, Product } from '@prisma/client';
+import { CartItem, Product } from '@prisma/client';
 
 @Injectable()
 export class CartService {
@@ -11,7 +11,7 @@ export class CartService {
     private readonly productService: ProductService,
   ) {}
 
-  async create(createCartDto: CreateCartDto): Promise<Cart | null> {
+  async create(createCartDto: CreateCartDto): Promise<CartItem | null> {
     const product: Product = await this.productService.findOne(
       createCartDto.productId,
     );
@@ -23,22 +23,25 @@ export class CartService {
       );
     }
 
-    return this.databaseService.createEntity('Cart', createCartDto);
+    return this.databaseService.createEntity('CartItem', createCartDto);
   }
 
-  async findAll(): Promise<Cart[]> {
-    return this.databaseService.findAllEntities('Cart');
+  async findAll(): Promise<CartItem[]> {
+    return this.databaseService.findAllEntities('CartItem');
   }
 
-  async findOne(id: number): Promise<Cart | null> {
-    return this.databaseService.findEntityById('Cart', id);
+  async findOne(id: number): Promise<CartItem | null> {
+    return this.databaseService.findEntityById('CartItem', id);
   }
 
-  async update(id: number, updateCartDto: UpdateCartDto): Promise<Cart | null> {
-    return this.databaseService.updateEntity('Cart', id, updateCartDto);
+  async update(
+    id: number,
+    updateCartDto: UpdateCartDto,
+  ): Promise<CartItem | null> {
+    return this.databaseService.updateEntity('CartItem', id, updateCartDto);
   }
 
-  async remove(id: number): Promise<Cart | null> {
-    return this.databaseService.deleteEntity('Cart', id);
+  async remove(id: number): Promise<CartItem | null> {
+    return this.databaseService.deleteEntity('CartItem', id);
   }
 }
