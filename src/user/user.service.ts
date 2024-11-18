@@ -45,7 +45,7 @@ export class UserService {
   }
 
   async findCartByUserId(userId: number): Promise<any[]> {
-    const query: string = `SELECT * FROM "Cart" WHERE "userId" = ${userId}`;
+    const query: string = `SELECT * FROM "CartItem" WHERE "userId" = ${userId}`;
     const cartItems: any[] = await this.databaseService.executeQuery(query);
 
     for (const cartItem of cartItems) {
@@ -81,7 +81,7 @@ export class UserService {
   }
 
   async dropCartByUserId(userId: number): Promise<any[]> {
-    const query: string = `DELETE FROM "Cart" WHERE "userId" = ${userId} RETURNING *`;
+    const query: string = `DELETE FROM "CartItem" WHERE "userId" = ${userId} RETURNING *`;
     const deletedCarts: any[] = await this.databaseService.executeQuery(query);
 
     return deletedCarts;
