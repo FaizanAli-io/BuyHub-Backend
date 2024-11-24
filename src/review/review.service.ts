@@ -8,11 +8,9 @@ export class ReviewService {
   constructor(private readonly databaseService: DatabaseService) {}
 
   async create(createReviewDto: CreateReviewDto): Promise<Review | null> {
-    const createdAt = this.databaseService.getCurrentDate();
-
     return this.databaseService.createEntity('Review', {
       ...createReviewDto,
-      createdAt,
+      createdAt: this.databaseService.getCurrentDate(),
     });
   }
 
@@ -33,5 +31,15 @@ export class ReviewService {
 
   async remove(id: number): Promise<Review | null> {
     return this.databaseService.deleteEntity('Review', id);
+  }
+
+  async findReviewsByUserId(userId: number): Promise<Review[]> {
+    const query: string = `SELECT * FROM "Review" WHERE "userId" = ${userId}`;
+    return this.databaseService.executeQuery(query);
+  }
+
+  async findReviewsByProductId(productId: number): Promise<Review[]> {
+    const query: string = `SELECT * FROM "Review" WHERE "productId" = ${productId}`;
+    return this.databaseService.executeQuery(query);
   }
 }

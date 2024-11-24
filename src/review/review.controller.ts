@@ -56,4 +56,26 @@ export class ReviewController {
   remove(@Param('id', ParseIntPipe) id: number) {
     return this.reviewService.remove(id);
   }
+
+  @Get('user/:id')
+  @ApiOperation({ summary: 'Retrieve all reviews associated with a user' })
+  @ApiResponse({
+    status: 200,
+    description: 'List of reviews associated with the user.',
+  })
+  findReviewsByUserId(@Param('id', ParseIntPipe) id: number): Promise<any[]> {
+    return this.reviewService.findReviewsByUserId(id);
+  }
+
+  @Get('product/:id')
+  @ApiOperation({ summary: 'Retrieve all reviews associated with a product' })
+  @ApiResponse({
+    status: 200,
+    description: 'List of reviews associated with the product.',
+  })
+  findReviewsByProductId(
+    @Param('id', ParseIntPipe) id: number,
+  ): Promise<any[]> {
+    return this.reviewService.findReviewsByProductId(id);
+  }
 }

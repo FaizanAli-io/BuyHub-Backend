@@ -8,7 +8,13 @@ export class ProductService {
   constructor(private readonly databaseService: DatabaseService) {}
 
   async create(createProductDto: CreateProductDto): Promise<Product | null> {
-    return this.databaseService.createEntity('Product', createProductDto);
+    const rightNow = this.databaseService.getCurrentDate();
+
+    return this.databaseService.createEntity('Product', {
+      ...createProductDto,
+      createdAt: rightNow,
+      updatedAt: rightNow,
+    });
   }
 
   async findAll(): Promise<Product[]> {
@@ -30,9 +36,8 @@ export class ProductService {
     return this.databaseService.deleteEntity('Product', id);
   }
 
-  async findReviewsByProductId(productId: number): Promise<Review[]> {
-    const query: string = `SELECT * FROM "Review" WHERE "productId" = ${productId}`;
-
+  async findProductsByUserId(userId: number): Promise<Product[]> {
+    const query: string = `SELECT * FROM "Product" WHERE "userId" = ${userId}`;
     return this.databaseService.executeQuery(query);
   }
 }

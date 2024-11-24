@@ -1,40 +1,41 @@
 import { Injectable } from '@nestjs/common';
-import { DatabaseService } from 'src/database/database.service';
-import { ProductService } from 'src/product/product.service';
-import { UserService } from 'src/user/user.service';
+import { Order, OrderStatus } from '@prisma/client';
 import { CreateOrderDto, UpdateOrderDto } from './dto';
-import { Order, OrderItem, OrderStatus } from '@prisma/client';
+import { ProductService } from 'src/product/product.service';
+import { CartItemService } from 'src/cart-item/cart-item.service';
+import { DatabaseService } from 'src/database/database.service';
 
 @Injectable()
 export class OrderService {
   constructor(
     private readonly databaseService: DatabaseService,
     private readonly productService: ProductService,
-    private readonly userService: UserService,
+    private readonly cartItemService: CartItemService,
   ) {}
 
   async create(createOrderDto: CreateOrderDto): Promise<Order | null> {
-    let order = await this.databaseService.createEntity('Order', {
-      total: 0,
+    const order: any = await this.databaseService.createEntity('Order', {
       ...createOrderDto,
       status: OrderStatus.PENDING,
       createdAt: this.databaseService.getCurrentDate(),
     });
 
-    order = await this.populateOrder(order);
+    await this.createOrderItems(order);
+    await this.populateOrder(order);
 
     return order;
   }
 
   async findAll(): Promise<Order[]> {
-    return this.databaseService.findAllEntities('Order');
+    const orders: any[] = await this.databaseService.findAllEntities('Order');
+    await Promise.all(orders.map((order) => this.populateOrder(order)));
+
+    return orders;
   }
 
-  async findOne(id: number): Promise<any> {
+  async findOne(id: number): Promise<Order> {
     const order: any = await this.databaseService.findEntityById('Order', id);
-
-    const query: string = `SELECT * FROM "OrderItem" WHERE "orderId" = ${id}`;
-    order.items = await this.databaseService.executeQuery(query);
+    await this.populateOrder(order);
 
     return order;
   }
@@ -50,12 +51,17 @@ export class OrderService {
     return this.databaseService.deleteEntity('Order', id);
   }
 
-  async populateOrder(order: any) {
-    const cartItems: any[] = await this.userService.findCartByUserId(
-      order.userId,
-    );
+  async findOrdersByUserId(userId: number): Promise<Order[]> {
+    const query: string = `SELECT * FROM "Order" WHERE "userId" = ${userId}`;
 
-    order.items = [];
+    const orders: any[] = await this.databaseService.executeQuery(query);
+    await Promise.all(orders.map((order) => this.populateOrder(order)));
+
+    return orders;
+  }
+
+  private async createOrderItems(order: Order): Promise<void> {
+    const cartItems = await this.cartItemService.findCartByUserId(order.userId);
 
     for (const cartItem of cartItems) {
       const orderItemData = {
@@ -65,39 +71,20 @@ export class OrderService {
         quantity: cartItem.quantity,
       };
 
-      const orderItem: OrderItem = await this.databaseService.createEntity(
-        'OrderItem',
-        orderItemData,
-      );
+      await this.databaseService.createEntity('OrderItem', orderItemData);
 
-      const boughtProduct = await this.productService.findOne(
-        orderItem.productId,
-      );
+      const product = await this.productService.findOne(cartItem.productId);
 
-      const updateProductData = {
-        quantity: boughtProduct.quantity - orderItem.quantity,
-      };
-
-      await this.productService.update(boughtProduct.id, updateProductData);
-
-      order.items.push(orderItem);
+      await this.productService.update(product.id, {
+        quantity: product.quantity - cartItem.quantity,
+      });
     }
 
-    const total = this.computeTotal(order.items);
-
-    await this.update(order.id, { total });
-
-    order.total = total;
-
-    await this.userService.dropCartByUserId(order.userId);
-
-    return order;
+    await this.cartItemService.dropCartByUserId(order.userId);
   }
 
-  computeTotal(orderItems: OrderItem[]): number {
-    return orderItems.reduce(
-      (sum, orderItem) => sum + orderItem.price * orderItem.quantity,
-      0,
-    );
+  private async populateOrder(order: any): Promise<void> {
+    const query: string = `SELECT * FROM "OrderItem" WHERE "orderId" = ${order.id}`;
+    order.items = await this.databaseService.executeQuery(query);
   }
 }

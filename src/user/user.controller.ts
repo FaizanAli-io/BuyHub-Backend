@@ -55,53 +55,6 @@ export class UserController {
     return this.userService.findOne(id);
   }
 
-  @Get(':id/cart')
-  @ApiOperation({ summary: 'Retrieve the cart associated with a user' })
-  @ApiResponse({
-    status: 200,
-    description: 'The cart associated with the user.',
-  })
-  findCartByUserId(@Param('id') id: number): Promise<any> {
-    return this.userService.findCartByUserId(id);
-  }
-
-  @Get(':id/orders')
-  @ApiOperation({ summary: 'Retrieve the orders associated with a user' })
-  @ApiResponse({
-    status: 200,
-    description: 'The orders associated with the user.',
-  })
-  findOrdersByUserId(@Param('id') id: number): Promise<any> {
-    return this.userService.findOrdersByUserId(id);
-  }
-
-  @Get(':id/products')
-  @ApiOperation({ summary: 'Retrieve all products associated with a user' })
-  @ApiResponse({
-    status: 200,
-    description: 'List of products associated with the user.',
-  })
-  findProductsByUserId(@Param('id') id: number): Promise<any[]> {
-    return this.userService.findProductsByUserId(id);
-  }
-
-  @Get(':id/reviews')
-  @ApiOperation({ summary: 'Retrieve all reviews associated with a user' })
-  @ApiResponse({
-    status: 200,
-    description: 'List of reviews associated with the user.',
-  })
-  findReviewsByUserId(@Param('id', ParseIntPipe) id: number): Promise<any[]> {
-    return this.userService.findReviewsByUserId(id);
-  }
-
-  @Delete(':id/cart')
-  @ApiOperation({ summary: 'Delete the cart associated with a user' })
-  @ApiResponse({ status: 200, description: 'Cart deleted.' })
-  dropCartByUserId(@Param('id') id: number): Promise<any> {
-    return this.userService.dropCartByUserId(id);
-  }
-
   @Patch(':id')
   @ApiOperation({ summary: 'Update a user by ID' })
   @ApiBody({ type: UpdateUserDto })

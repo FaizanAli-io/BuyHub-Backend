@@ -57,15 +57,13 @@ export class ProductController {
     return this.productsService.remove(id);
   }
 
-  @Get(':id/reviews')
-  @ApiOperation({ summary: 'Retrieve all reviews associated with a product' })
+  @Get('user/:id')
+  @ApiOperation({ summary: 'Retrieve all products associated with a user' })
   @ApiResponse({
     status: 200,
-    description: 'List of reviews associated with the product.',
+    description: 'List of products associated with the user.',
   })
-  findReviewsByProductId(
-    @Param('id', ParseIntPipe) id: number,
-  ): Promise<any[]> {
-    return this.productsService.findReviewsByProductId(id);
+  findProductsByUserId(@Param('id') id: number): Promise<any[]> {
+    return this.productsService.findProductsByUserId(id);
   }
 }

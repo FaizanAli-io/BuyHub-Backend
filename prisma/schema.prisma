@@ -19,7 +19,7 @@ model User {
   orders    Order[]
   reviews   Review[]
   products  Product[]
-  cartItems CartItem[]
+  cartitems CartItem[] 
 }
 
 model Product {
@@ -28,27 +28,28 @@ model Product {
   description String
   price       Float
   quantity    Int
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
   category    Category?   @relation(fields: [categoryId], references: [id])
   categoryId  Int?
   user        User        @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId      Int
   reviews     Review[]
   cartItems   CartItem[]
-  OrderItem   OrderItem[]
+  orderItems  OrderItem[]
 }
 
 model CartItem {
-  id        Int     @id @default(autoincrement())
+  id        Int        @id @default(autoincrement())
   quantity  Int
-  user      User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user      User       @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId    Int
-  product   Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+  product   Product    @relation(fields: [productId], references: [id], onDelete: Cascade)
   productId Int
 }
 
 model Order {
   id        Int         @id @default(autoincrement())
-  total     Float
   user      User        @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId    Int
   status    OrderStatus
@@ -64,13 +65,7 @@ model OrderItem {
   productId Int
   order     Order   @relation(fields: [orderId], references: [id], onDelete: Cascade)
   orderId   Int
-}
-
-model Category {
-  id       Int       @id @default(autoincrement())
-  name     String    @unique
-  products Product[]
-}
+} 
 
 model Review {
   id        Int      @id @default(autoincrement())
@@ -81,6 +76,12 @@ model Review {
   product   Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
   productId Int
   createdAt DateTime @default(now())
+}
+
+model Category {
+  id       Int       @id @default(autoincrement())
+  name     String    @unique
+  products Product[]
 }
 
 enum OrderStatus {

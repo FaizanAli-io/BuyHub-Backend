@@ -1,6 +1,6 @@
 import { IsInt, IsNotEmpty } from 'class-validator';
 
-export class CreateCartDto {
+export class CreateCartItemDto {
   @IsInt()
   @IsNotEmpty()
   quantity: number;
