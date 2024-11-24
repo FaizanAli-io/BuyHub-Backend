@@ -8,9 +8,9 @@ import { DatabaseService } from 'src/database/database.service';
 @Injectable()
 export class OrderService {
   constructor(
-    private readonly databaseService: DatabaseService,
     private readonly productService: ProductService,
     private readonly cartItemService: CartItemService,
+    private readonly databaseService: DatabaseService,
   ) {}
 
   async create(createOrderDto: CreateOrderDto): Promise<Order | null> {

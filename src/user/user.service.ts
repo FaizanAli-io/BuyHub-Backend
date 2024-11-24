@@ -1,4 +1,4 @@
-import { User } from '@prisma/client';
+import { Role, User } from '@prisma/client';
 import { Injectable } from '@nestjs/common';
 import { CreateUserDto, UpdateUserDto, LoginUserDto } from './dto';
 import { DatabaseService } from 'src/database/database.service';
@@ -49,5 +49,20 @@ export class UserService {
 
   async remove(id: number): Promise<User | null> {
     return this.databaseService.deleteEntity('User', id);
+  }
+
+  async verifyAdmin(id: number): Promise<boolean> {
+    const user = await this.findOne(id);
+    return user.role === Role.ADMIN;
+  }
+
+  async verifySeller(id: number): Promise<boolean> {
+    const user = await this.findOne(id);
+    return user.role === Role.SELLER;
+  }
+
+  async verifyBuyer(id: number): Promise<boolean> {
+    const user = await this.findOne(id);
+    return user.role === Role.BUYER;
   }
 }
