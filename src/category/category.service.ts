@@ -21,7 +21,6 @@ export class CategoryService {
 
   async findProductsByCategoryId(categoryId: number): Promise<Product[]> {
     const query: string = `SELECT * FROM "Product" WHERE "categoryId" = ${categoryId}`;
-
     return this.databaseService.executeQuery(query);
   }
 

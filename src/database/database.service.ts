@@ -46,16 +46,16 @@ export class DatabaseService extends PrismaClient implements OnModuleInit {
       .join(', ');
 
     const query: string = `UPDATE "${table}" SET ${updates} WHERE id = ${id} RETURNING *`;
-    const result: any = this.$queryRawUnsafe(query);
+    const result: any = await this.$queryRawUnsafe(query);
 
-    return result;
+    return result[0];
   }
 
   async deleteEntity(table: string, id: number): Promise<any> {
     const query: string = `DELETE FROM "${table}" WHERE id = ${id} RETURNING *`;
-    const result: any = this.$queryRawUnsafe(query);
+    const result: any = await this.$queryRawUnsafe(query);
 
-    return result;
+    return result[0];
   }
 
   async executeQuery(query: string, many: boolean = true): Promise<any> {

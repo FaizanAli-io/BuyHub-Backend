@@ -51,7 +51,7 @@ export class CartItemService {
 
     for (const cartItem of cartItems) {
       const query: string = `SELECT * FROM "Product" WHERE id = ${cartItem.productId}`;
-      cartItem.product = await this.databaseService.executeQuery(query, true);
+      cartItem.product = await this.databaseService.executeQuery(query, false);
     }
 
     return cartItems;
