@@ -3,53 +3,39 @@ import { Role } from '@prisma/client';
 
 const users = [
   {
-    name: 'faizan',
+    name: 'Faizan',
     email: 'faizan@example.com',
     password: '12345',
     role: Role.ADMIN,
     address: '1234 Block 7, Gulshan-e-Iqbal, Karachi, Sindh, Pakistan',
   },
   {
-    name: 'zaid',
+    name: 'Zaid',
     email: 'zaid@example.com',
     password: '12345',
     role: Role.SELLER,
     address: '2345 Block 13, Korangi, Karachi, Sindh, Pakistan',
   },
   {
-    name: 'hamail',
+    name: 'Hamail',
     email: 'hamail@example.com',
     password: '12345',
     role: Role.SELLER,
     address: '3456 Block 4, Saddar, Karachi, Sindh, Pakistan',
   },
   {
-    name: 'aadil',
+    name: 'Aadil',
     email: 'aadil@example.com',
     password: '12345',
-    role: Role.SELLER,
+    role: Role.BUYER,
     address: '4567 Block 2, Liaquatabad, Karachi, Sindh, Pakistan',
   },
   {
-    name: 'jaswant',
-    email: 'jaswant@example.com',
-    password: '12345',
-    role: Role.BUYER,
-    address: '5678 Block 9, Malir, Karachi, Sindh, Pakistan',
-  },
-  {
-    name: 'huzaifa',
+    name: 'Huzaifa',
     email: 'huzaifa@example.com',
     password: '12345',
     role: Role.BUYER,
     address: '6789 Block 8, Gulistan-e-Jauhar, Karachi, Sindh, Pakistan',
-  },
-  {
-    name: 'usman',
-    email: 'usman@example.com',
-    password: '12345',
-    role: Role.BUYER,
-    address: '7890 Block 6, Karachi Cantonment, Karachi, Sindh, Pakistan',
   },
 ];
 

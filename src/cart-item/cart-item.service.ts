@@ -63,4 +63,17 @@ export class CartItemService {
 
     return deletedCarts;
   }
+
+  async updateCartQuantity(productId: number): Promise<void> {
+    const product: Product = await this.productService.findOne(productId);
+
+    const query: string = `SELECT * FROM "CartItem" WHERE "productId" = ${productId}`;
+    const cartItems: any[] = await this.databaseService.executeQuery(query);
+
+    for (const item of cartItems) {
+      if (item.quantity > product.quantity) {
+        await this.update(item.id, { quantity: product.quantity });
+      }
+    }
+  }
 }

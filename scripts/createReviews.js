@@ -4,10 +4,10 @@ const BASE_URL = 'http://localhost:3000';
 
 const productIds = [
   1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22,
-  23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35,
+  23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36,
 ];
 
-const userIds = [5, 6, 7];
+const userIds = [4, 5];
 
 const reviewContent = [
   { text: 'This product exceeded my expectations!', rating: [4, 5] }, // Positive
@@ -39,7 +39,7 @@ const generateRandomReview = (productId) => {
 };
 
 const reviews = [];
-for (let i = 0; i < 128; i++) {
+for (let i = 0; i < 256; i++) {
   const productId = productIds[Math.floor(Math.random() * productIds.length)];
   reviews.push(generateRandomReview(productId));
 }

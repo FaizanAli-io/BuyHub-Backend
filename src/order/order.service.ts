@@ -25,7 +25,6 @@ export class OrderService {
     });
 
     await this.createOrderItems(order);
-    await this.populateOrder(order);
 
     return order;
   }
@@ -64,7 +63,7 @@ export class OrderService {
     return orders;
   }
 
-  async payOrder(id: number): Promise<{ message: string }> {
+  async payOrder(id: number): Promise<{ message: string; total: number }> {
     const order = await this.findOne(id);
     this.populateOrder(order);
 
@@ -87,11 +86,20 @@ export class OrderService {
       status: OrderStatus.COMPLETED,
     });
 
-    return { message: 'payment successfully processed' };
+    return { message: 'payment successfully processed', total: total };
   }
 
   async cancelOrder(id: number): Promise<{ message: string }> {
-    const order = await this.findOne(id);
+    const order: any = await this.findOne(id);
+    this.populateOrder(order);
+
+    for (const item of order.items) {
+      const product = await this.productService.findOne(item.productId);
+
+      await this.productService.update(item.productId, {
+        quantity: product.quantity + item.quantity,
+      });
+    }
 
     await this.update(id, {
       status: OrderStatus.CANCELLED,
@@ -114,13 +122,15 @@ export class OrderService {
       await this.databaseService.createEntity('OrderItem', orderItemData);
 
       const product = await this.productService.findOne(cartItem.productId);
+      const newQuantity = product.quantity - cartItem.quantity;
 
-      await this.productService.update(product.id, {
-        quantity: product.quantity - cartItem.quantity,
-      });
+      await this.productService.update(product.id, { quantity: newQuantity });
+      await this.cartItemService.updateCartQuantity(product.id);
     }
 
     await this.cartItemService.dropCartByUserId(order.userId);
+
+    await this.populateOrder(order);
   }
 
   private async populateOrder(order: any): Promise<void> {

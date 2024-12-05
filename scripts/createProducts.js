@@ -208,8 +208,17 @@ const products = [
     quantity: 123,
   },
   {
+    categoryId: 4,
+    userId: 3,
+    name: 'Casual Wear Loafers',
+    description:
+      'Comfortable and stylish loafers for casual and semi-casual wear.',
+    price: 35,
+    quantity: 123,
+  },
+  {
     categoryId: 5,
-    userId: 4,
+    userId: 2,
     name: 'Luxury Oud Perfume',
     description:
       'An exotic, long-lasting oud perfume with warm, woody undertones.',
@@ -218,7 +227,7 @@ const products = [
   },
   {
     categoryId: 6,
-    userId: 4,
+    userId: 3,
     name: 'Rosewater Face Cream',
     description:
       'A refreshing face cream made with natural rosewater for smooth and glowing skin.',
@@ -227,7 +236,7 @@ const products = [
   },
   {
     categoryId: 5,
-    userId: 4,
+    userId: 2,
     name: 'Jasmine Scented Candles',
     description:
       'Hand-poured candles with a calming jasmine fragrance for a relaxing atmosphere.',
@@ -236,7 +245,7 @@ const products = [
   },
   {
     categoryId: 6,
-    userId: 4,
+    userId: 3,
     name: 'Lavender Essential Oil',
     description:
       'A pure lavender essential oil that promotes relaxation and stress relief.',
@@ -245,7 +254,7 @@ const products = [
   },
   {
     categoryId: 5,
-    userId: 4,
+    userId: 2,
     name: 'Amber & Musk Perfume',
     description:
       'A sophisticated blend of amber and musk, perfect for evening wear.',
@@ -254,7 +263,7 @@ const products = [
   },
   {
     categoryId: 6,
-    userId: 4,
+    userId: 3,
     name: 'Aloe Vera Body Lotion',
     description:
       'A soothing aloe vera lotion that hydrates and softens dry skin.',
@@ -263,7 +272,7 @@ const products = [
   },
   {
     categoryId: 5,
-    userId: 4,
+    userId: 2,
     name: 'Vanilla Spice Fragrance Oil',
     description:
       'A warm and inviting vanilla spice fragrance oil for home use.',
@@ -272,7 +281,7 @@ const products = [
   },
   {
     categoryId: 6,
-    userId: 4,
+    userId: 3,
     name: 'Charcoal Face Mask',
     description:
       'A detoxifying charcoal face mask that clears pores and revitalizes skin.',
@@ -281,7 +290,7 @@ const products = [
   },
   {
     categoryId: 5,
-    userId: 4,
+    userId: 2,
     name: 'Citrus Blossom Perfume',
     description: 'A refreshing citrus fragrance with a zesty and floral twist.',
     price: 90,
@@ -289,7 +298,7 @@ const products = [
   },
   {
     categoryId: 6,
-    userId: 4,
+    userId: 3,
     name: 'Vitamin C Serum',
     description:
       'A potent vitamin C serum that brightens and rejuvenates your skin.',
@@ -298,7 +307,7 @@ const products = [
   },
   {
     categoryId: 5,
-    userId: 4,
+    userId: 2,
     name: 'Sandalwood & Musk Eau De Parfum',
     description:
       'A deep and earthy sandalwood fragrance, perfect for sophisticated evenings.',
@@ -307,7 +316,7 @@ const products = [
   },
   {
     categoryId: 6,
-    userId: 4,
+    userId: 3,
     name: 'Green Tea Face Scrub',
     description:
       'A refreshing green tea face scrub that exfoliates and rejuvenates the skin.',
