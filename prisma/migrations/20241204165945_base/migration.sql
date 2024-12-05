@@ -1,5 +1,5 @@
 -- CreateEnum
-CREATE TYPE "OrderStatus" AS ENUM ('PENDING', 'COMPLETED', 'CANCELLED');
+CREATE TYPE "OrderStatus" AS ENUM ('SHIPPING', 'COMPLETED', 'CANCELLED');
 
 -- CreateEnum
 CREATE TYPE "Role" AS ENUM ('ADMIN', 'BUYER', 'SELLER');
@@ -11,6 +11,8 @@ CREATE TABLE "User" (
     "email" TEXT NOT NULL,
     "password" TEXT NOT NULL,
     "authToken" TEXT NOT NULL,
+    "address" TEXT NOT NULL,
+    "balance" INTEGER NOT NULL,
     "role" "Role" NOT NULL,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
@@ -34,19 +36,10 @@ CREATE TABLE "Product" (
 );
 
 -- CreateTable
-CREATE TABLE "Cart" (
-    "id" SERIAL NOT NULL,
-    "userId" INTEGER NOT NULL,
-    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-
-    CONSTRAINT "Cart_pkey" PRIMARY KEY ("id")
-);
-
--- CreateTable
 CREATE TABLE "CartItem" (
     "id" SERIAL NOT NULL,
     "quantity" INTEGER NOT NULL,
-    "cartId" INTEGER NOT NULL,
+    "userId" INTEGER NOT NULL,
     "productId" INTEGER NOT NULL,
 
     CONSTRAINT "CartItem_pkey" PRIMARY KEY ("id")
@@ -58,6 +51,8 @@ CREATE TABLE "Order" (
     "userId" INTEGER NOT NULL,
     "status" "OrderStatus" NOT NULL,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "buyerConfirmed" BOOLEAN NOT NULL,
+    "sellerConfirmed" BOOLEAN NOT NULL,
 
     CONSTRAINT "Order_pkey" PRIMARY KEY ("id")
 );
@@ -106,10 +101,7 @@ ALTER TABLE "Product" ADD CONSTRAINT "Product_categoryId_fkey" FOREIGN KEY ("cat
 ALTER TABLE "Product" ADD CONSTRAINT "Product_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "Cart" ADD CONSTRAINT "Cart_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE CASCADE ON UPDATE CASCADE;
-
--- AddForeignKey
-ALTER TABLE "CartItem" ADD CONSTRAINT "CartItem_cartId_fkey" FOREIGN KEY ("cartId") REFERENCES "Cart"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE "CartItem" ADD CONSTRAINT "CartItem_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "CartItem" ADD CONSTRAINT "CartItem_productId_fkey" FOREIGN KEY ("productId") REFERENCES "Product"("id") ON DELETE CASCADE ON UPDATE CASCADE;

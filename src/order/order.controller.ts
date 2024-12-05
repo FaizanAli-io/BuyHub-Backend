@@ -51,6 +51,20 @@ export class OrderController {
     return this.orderService.remove(id);
   }
 
+  @Get(':id/payOrder')
+  @ApiOperation({ summary: 'Pay an order by ID' })
+  @ApiResponse({ status: 200, description: 'Order payment successful.' })
+  payOrder(@Param('id') id: number) {
+    return this.orderService.payOrder(id);
+  }
+
+  @Get(':id/cancelOrder')
+  @ApiOperation({ summary: 'Cancel an order by ID' })
+  @ApiResponse({ status: 200, description: 'Order cancellation successful.' })
+  cancelOrder(@Param('id') id: number) {
+    return this.orderService.cancelOrder(id);
+  }
+
   @Get('user/:id')
   @ApiOperation({ summary: 'Retrieve the orders associated with a user' })
   @ApiResponse({

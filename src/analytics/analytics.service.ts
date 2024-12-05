@@ -101,7 +101,8 @@ export class AnalyticsService {
       JOIN "OrderItem" oi ON o.id = oi."orderId"
       JOIN "Product" p ON oi."productId" = p.id
       JOIN "Category" c ON p."categoryId" = c.id
-      WHERE o."userId" = ${buyerId}
+      WHERE o."userId" = ${buyerId} and 
+      o.status = 'COMPLETED'
       GROUP BY c.name
     `);
 
@@ -111,7 +112,8 @@ export class AnalyticsService {
       SELECT SUM(oi.price * oi.quantity) AS "totalSpent"
       FROM "Order" o
       JOIN "OrderItem" oi ON o.id = oi."orderId"
-      WHERE o."userId" = ${buyerId}
+      WHERE o."userId" = ${buyerId} and 
+      o.status = 'COMPLETED'
     `,
       false,
     );
@@ -122,7 +124,9 @@ export class AnalyticsService {
              SUM(oi.price * oi.quantity) AS spending 
       FROM "Order" o
       JOIN "OrderItem" oi ON o.id = oi."orderId"
-      WHERE o."userId" = ${buyerId} AND o."createdAt" >= NOW() - INTERVAL '6 months'
+      WHERE o."userId" = ${buyerId} AND 
+      o."createdAt" >= NOW() - INTERVAL '6 months' and 
+      o.status = 'COMPLETED'
       GROUP BY to_char(o."createdAt", 'YYYY-MM')
       ORDER BY month
     `);

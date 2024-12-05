@@ -34,12 +34,28 @@ export class ReviewService {
   }
 
   async findReviewsByUserId(userId: number): Promise<Review[]> {
-    const query: string = `SELECT * FROM "Review" WHERE "userId" = ${userId}`;
+    const query: string = `
+      SELECT 
+        r.rating, 
+        r.content, 
+        r."createdAt",
+        p.name AS "productName"
+      FROM "Review" r
+      INNER JOIN "Product" p ON r."productId" = p.id
+      WHERE r."userId" = ${userId}`;
     return this.databaseService.executeQuery(query);
   }
 
   async findReviewsByProductId(productId: number): Promise<Review[]> {
-    const query: string = `SELECT * FROM "Review" WHERE "productId" = ${productId}`;
+    const query: string = `
+      SELECT 
+        r.rating, 
+        r.content, 
+        r."createdAt",
+        u.name AS "userName"
+      FROM "Review" r
+      INNER JOIN "User" u ON r."userId" = u.id
+      WHERE r."productId" = ${productId}`;
     return this.databaseService.executeQuery(query);
   }
 }

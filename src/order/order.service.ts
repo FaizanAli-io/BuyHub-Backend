@@ -1,6 +1,7 @@
-import { Injectable } from '@nestjs/common';
+import { HttpStatus, HttpException, Injectable } from '@nestjs/common';
 import { Order, OrderStatus } from '@prisma/client';
 import { CreateOrderDto, UpdateOrderDto } from './dto';
+import { UserService } from 'src/user/user.service';
 import { ProductService } from 'src/product/product.service';
 import { CartItemService } from 'src/cart-item/cart-item.service';
 import { DatabaseService } from 'src/database/database.service';
@@ -8,6 +9,7 @@ import { DatabaseService } from 'src/database/database.service';
 @Injectable()
 export class OrderService {
   constructor(
+    private readonly userService: UserService,
     private readonly productService: ProductService,
     private readonly cartItemService: CartItemService,
     private readonly databaseService: DatabaseService,
@@ -16,7 +18,9 @@ export class OrderService {
   async create(createOrderDto: CreateOrderDto): Promise<Order | null> {
     const order: any = await this.databaseService.createEntity('Order', {
       ...createOrderDto,
-      status: OrderStatus.PENDING,
+      buyerConfirmed: false,
+      sellerConfirmed: false,
+      status: OrderStatus.SHIPPING,
       createdAt: this.databaseService.getCurrentDate(),
     });
 
@@ -60,6 +64,42 @@ export class OrderService {
     return orders;
   }
 
+  async payOrder(id: number): Promise<{ message: string }> {
+    const order = await this.findOne(id);
+    this.populateOrder(order);
+
+    const total = this.computeTotal(order);
+
+    const user = await this.userService.findOne(order.userId);
+
+    if (user.balance < total) {
+      throw new HttpException(
+        'Total cost exceeds user balance',
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+
+    await this.userService.update(user.id, {
+      balance: user.balance - total,
+    });
+
+    await this.update(id, {
+      status: OrderStatus.COMPLETED,
+    });
+
+    return { message: 'payment successfully processed' };
+  }
+
+  async cancelOrder(id: number): Promise<{ message: string }> {
+    const order = await this.findOne(id);
+
+    await this.update(id, {
+      status: OrderStatus.CANCELLED,
+    });
+
+    return { message: 'order successfully cancelled' };
+  }
+
   private async createOrderItems(order: Order): Promise<void> {
     const cartItems = await this.cartItemService.findCartByUserId(order.userId);
 
@@ -86,5 +126,15 @@ export class OrderService {
   private async populateOrder(order: any): Promise<void> {
     const query: string = `SELECT * FROM "OrderItem" WHERE "orderId" = ${order.id}`;
     order.items = await this.databaseService.executeQuery(query);
+  }
+
+  private computeTotal(order: any): number {
+    let total: number = 0;
+
+    for (const item of order.items) {
+      total += item.quantity * item.price;
+    }
+
+    return total;
   }
 }

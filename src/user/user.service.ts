@@ -15,6 +15,7 @@ export class UserService {
       ...createUserDto,
       createdAt: rightNow,
       updatedAt: rightNow,
+      balance: 5000,
       authToken,
     });
   }
@@ -52,17 +53,19 @@ export class UserService {
   }
 
   async verifyAdmin(id: number): Promise<boolean> {
-    const user = await this.findOne(id);
-    return user.role === Role.ADMIN;
+    return this.verifyUser(id, Role.ADMIN);
   }
 
   async verifySeller(id: number): Promise<boolean> {
-    const user = await this.findOne(id);
-    return user.role === Role.SELLER;
+    return this.verifyUser(id, Role.SELLER);
   }
 
   async verifyBuyer(id: number): Promise<boolean> {
+    return this.verifyUser(id, Role.BUYER);
+  }
+
+  async verifyUser(id: number, role: Role): Promise<boolean> {
     const user = await this.findOne(id);
-    return user.role === Role.BUYER;
+    return user.role == role;
   }
 }
